@@ -6,7 +6,7 @@ class Transactions(Base):
     
     __tablename__= 'transactions'
     
-    id =   Column(Integer, primarykey=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     amount = Column(Float)
     category = Column(String)
     description = Column(String)
