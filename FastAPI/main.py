@@ -11,24 +11,23 @@ app = FastAPI()
 origin =[
     'http://localhost:3000'
 ]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # You can specify the allowed origins here
+    allow_origins=origin,  # You can specify the allowed origins here
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods
     allow_headers=["*"],  # Allow all headers
 )
 
 #validate req from react app
-class TransactionBase(BaseModel):
+class TransactionBase(BaseModel): #for post
     amount:float
     category:str
     description:str
     is_income:bool
     date:str
      
-class TransactionModel(TransactionBase):
+class TransactionModel(TransactionBase):# for response
     id:int
 
     class Config:
@@ -59,7 +58,7 @@ async def create_transaction(transaction:TransactionBase, db:db_depends):
     db.refresh(db_transaction)
     return db_transaction
     
-@app.get("/transactions", response_model=List[TransactionModel])
+@app.get("/transactions/", response_model=List[TransactionModel])
 async def read_transaction(db:db_depends, skip:int = 0, limit:int = 100):
     transactions = db.query(models.Transactions).offset(skip).limit(limit).all()
     return transactions
